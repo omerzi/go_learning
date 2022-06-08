@@ -1,30 +1,21 @@
 package main
 
-import "fmt"
-
-type bot interface {
-	getGreeting() string
-}
-
-type englishBot struct{}
-type spanishBot struct{}
+import (
+	"fmt"
+)
 
 func main() {
-	eb := englishBot{}
-	sb := spanishBot{}
+	var nums []int
 
-	printGreeting(eb)
-	printGreeting(sb)
-}
+	for i := 1; i <= 10; i++ {
+		nums = append(nums, i)
+	}
 
-func printGreeting(b bot) {
-	fmt.Println(b.getGreeting())
-}
-
-func (englishBot) getGreeting() string {
-	return "Hello there!"
-}
-
-func (spanishBot) getGreeting() string {
-	return "Hola!"
+	for _, num := range nums {
+		if num%2 == 0 {
+			fmt.Printf("%d is even\n", num)
+		} else {
+			fmt.Printf("%d is odd\n", num)
+		}
+	}
 }
