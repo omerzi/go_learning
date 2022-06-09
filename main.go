@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -14,18 +15,29 @@ func main() {
 		"http://amazon.com",
 	}
 
+	c := make(chan string)
+
 	for _, site := range sites {
-		checkSite(site)
+		go checkSite(site, c)
+	}
+
+	for site := range c {
+		go func(s string) {
+			time.Sleep(3 * time.Second)
+			checkSite(s, c)
+		}(site)
 	}
 }
 
-func checkSite(site string) {
-	resp, err := http.Get(site)
+func checkSite(site string, c chan string) {
+	_, err := http.Get(site)
 
 	if err != nil {
-		fmt.Println(site, " is down")
+		fmt.Println(site, "is down")
+		c <- site
 		return
 	}
 
-	fmt.Println(resp.Status)
+	fmt.Println(site, "is up")
+	c <- site
 }
